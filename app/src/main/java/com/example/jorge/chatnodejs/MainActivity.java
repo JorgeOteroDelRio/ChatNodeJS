@@ -131,6 +131,84 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    public void crearDialogo(){
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle("Hola usuario");
+        alert.setMessage("Escribe tu nombre de usuario:");
+
+        final EditText input = new EditText(this);
+        alert.setView(input);
+
+        alert.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                id = input.getEditableText().toString();
+                connectWebSocket();
+            }
+        });
+
+        alert.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.cancel();
+            }
+        });
+        alert.create();
+        alert.show();
+    }
+
+    private void connectWebSocket() {
+        URI uri;
+        try {
+            uri = new URI("ws://chatserverandroid-jotaquery.c9users.io:8081");
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        Map<String, String> headers = new HashMap<>();
+        mWebSocketClient = new WebSocketClient(uri, new Draft_17(), headers, 0) {
+
+            @Override
+            public void onOpen(ServerHandshake serverHandshake) {
+                Log.i("Websocket", "Opened");
+                // mWebSocketClient.send("Hello from " + id );
+            }
+
+            /**
+             * Muestra todos los mensajes en el TextView
+             * @param s
+             */
+            @Override
+            public void onMessage(String s) {
+                final String message = s;
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        TextView textView = (TextView)findViewById(R.id.messages);
+                        try {
+                            textView.append(recibeJson() + "\n");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onClose(int i, String s, boolean b) {
+                Log.i("Websocket", "Closed " + s);
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Log.i("Websocket", "Error " + e.getMessage());
+            }
+        };
+
+        mWebSocketClient.connect();
+    }
+
 
 
 
