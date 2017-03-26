@@ -237,6 +237,12 @@ public class MainActivity extends AppCompatActivity
         return sms;
     }
 
+    public void sendMessage(View btn) {
+        mWebSocketClient.send(enviaJson());
+        mensaje.setText("");
+        destinatario.setText("");
+    }
+
 
 
 
