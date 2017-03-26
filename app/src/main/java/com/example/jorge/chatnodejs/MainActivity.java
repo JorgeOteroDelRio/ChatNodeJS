@@ -218,6 +218,25 @@ public class MainActivity extends AppCompatActivity
         return id + " " + getMensaje + " " + checkBox + " " + dest;
     }
 
+    public String enviaJson(){
+        clienteRecibe = new JSONObject();
+        mensaje = (EditText)findViewById(R.id.message);
+        destinatario = (EditText)findViewById(R.id.userDest);
+        check = (CheckBox)findViewById(R.id.smsPrivado);
+        checkBox = check.isChecked() ? "true" : "false";
+        getMensaje = mensaje.getText().toString();
+        dest = destinatario.getText().toString();
+        try{
+            clienteRecibe.put("id", id);
+            clienteRecibe.put("mensaje", getMensaje);
+            clienteRecibe.put("privado", checkBox);
+            clienteRecibe.put("destinatario", dest);
+        }catch (JSONException e){}
+
+        String sms = clienteRecibe.toString();
+        return sms;
+    }
+
 
 
 
