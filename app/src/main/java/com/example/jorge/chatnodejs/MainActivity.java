@@ -209,6 +209,15 @@ public class MainActivity extends AppCompatActivity
         mWebSocketClient.connect();
     }
 
+    public String recibeJson() throws JSONException {
+        clienteEnvia = new JSONObject();
+        id = clienteRecibe.getString("id");
+        getMensaje = clienteRecibe.getString("mensaje");
+        checkBox = clienteRecibe.getString("privado");
+        dest = clienteRecibe.getString("destinatario");
+        return id + " " + getMensaje + " " + checkBox + " " + dest;
+    }
+
 
 
 
